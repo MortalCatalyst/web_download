@@ -23,7 +23,9 @@ for i in range(delta.days + 1):
 
 listPayloads = []
 for item in listOfDates:
-    listPayloads.append(item + ",NSW,Royal%20Randwick&stage=Results")
+    listPayloads.append(
+        "http://racing.racingnsw.com.au/FreeFields/XML.aspx?Key=" + item +
+        ",NSW,Royal%20Randwick&stage=Results")
 
 # def download_file(url):
 #     r = req.get(url, stream=True)
@@ -35,20 +37,21 @@ for item in listOfDates:
 #     return a_file
 
 for load in listPayloads:
-    payload = {'Key': load}
-    actUrl = req.get(
-        "http://racing.racingnsw.com.au/FreeFields/XML.aspx?Key=2018May26,NSW,Royal%20Randwick&stage=Results"
-    )
-    # url_xml = req.get(
-    #     'http://racing.racingnsw.com.au/FreeFields/XML.aspx?', params=payload)
-    fileName = '/home/sayth/Racing_Download/' + actUrl.url[55:64] + ".xml"
+    # payload = {'Key': load}
+    # actUrl = req.get(
+    #     "http://racing.racingnsw.com.au/FreeFields/XML.aspx?Key=2018May26,NSW,Royal%20Randwick&stage=Results"
+    # , stream=True)
+    print(load)
+    url_xml = req.get(load, stream=True)
+    print(url_xml.raw)
+    fileName = '/home/sayth/Racing_Download/' + url_xml.url[55:64] + ".xml"
     with open(fileName, 'wb') as fd:
-        for chunk in actUrl.iter_content(chunk_size=128):
+        for chunk in url_xml.iter_content(chunk_size=128):
             fd.write(chunk)
     # try:
     #     with open('/home/sayth/Racing_Download/' + url_xml.url[65:74] + ".xml",
-    #               'wb') as fd:
-    #         for chunk in url_xml.iter_content(chunk_size=128):
+    #               'wb') as fd:tream=True
+    #         for chunk in url_xml.iter_content(chunk_size=128):tream=True
     #             fd.write(chunk)
     # except req.exceptions.HTTPError as err:
     #     next
