@@ -1,5 +1,5 @@
 import requests as req
-import json
+import os, os.path
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
 
@@ -91,3 +91,13 @@ links = soup.find_all('a')
 
 # for items in soup.select('a[class*="_self"]'):
 #     print(items)
+
+for root, _, files in os.walk("/home/sayth/Racing_Download"):
+    for f in files:
+        fullpath = os.path.join(root, f)
+        try:
+            if os.path.getsize(fullpath) < 20 * 1024:  #set file size in kb
+                print(fullpath)
+                os.remove(fullpath)
+        except OSError:
+            print("Error" + fullpath)
