@@ -12,13 +12,10 @@ url_meetings = req.get(
 
 # Create dates to pass as payload
 
-d1 = datetime(2008, 8, 15)  # start date
-d2 = datetime(2008, 9, 15)  # end date
+d1 = datetime(2018, 5, 15)  # start date
+d2 = datetime(2018, 6, 15)  # end date
 
 listOfDates = []
-
-d1 = datetime(2018, 4, 15)  # start date
-d2 = datetime(2018, 5, 21)  # end date
 
 delta = d2 - d1  # timedelta
 for i in range(delta.days + 1):
@@ -39,17 +36,22 @@ for item in listOfDates:
 
 for load in listPayloads:
     payload = {'Key': load}
-    url_xml = req.get(
-        'http://racing.racingnsw.com.au/FreeFields/XML.aspx?', params=payload)
-    try:
-        # print(url_xml.response)
-        fileName = url_xml.text55, 84 + ".xml"
-        with open(fileName, 'wb') as fd:
-            for chunk in url_xml.iter_content(chunk_size=128):
-                fd.write(chunk)
-    except req.exceptions.HTTPError as err:
-        # print(err)
-        pass
+    actUrl = req.get(
+        "http://racing.racingnsw.com.au/FreeFields/XML.aspx?Key=2018May26,NSW,Royal%20Randwick&stage=Results"
+    )
+    # url_xml = req.get(
+    #     'http://racing.racingnsw.com.au/FreeFields/XML.aspx?', params=payload)
+    fileName = '/home/sayth/Racing_Download/' + actUrl.url[55:64] + ".xml"
+    with open(fileName, 'wb') as fd:
+        for chunk in actUrl.iter_content(chunk_size=128):
+            fd.write(chunk)
+    # try:
+    #     with open('/home/sayth/Racing_Download/' + url_xml.url[65:74] + ".xml",
+    #               'wb') as fd:
+    #         for chunk in url_xml.iter_content(chunk_size=128):
+    #             fd.write(chunk)
+    # except req.exceptions.HTTPError as err:
+    #     next
 
 # payload = {'Key': '2018Jul07,NSW,Royal%20Randwick&stage=Results'}
 # url_xml = req.get(
