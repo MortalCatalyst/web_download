@@ -62,9 +62,6 @@ links = soup.find_all('a')
 # Trials = soup.findAll('a', {"class": "Trial"})
 # Metro = soup.findAll('a', {"class": "Metro"})
 
-# for item in Metro:
-#     print(item['href'])
-
 # import requests as req
 # from bs4 import BeautifulSoup
 
