@@ -28,25 +28,27 @@ listPayloads = []
 for item in listOfDates:
     listPayloads.append(item + ",NSW,Royal%20Randwick&stage=Results")
 
-
-def download_file(url):
-    r = req.get(url, stream=True)
-    with open(a_file, 'wb') as f:
-        for chunk in r.iter_content(chunk_size=1024):
-            if chunk:  # filter out keep-alive new chunks
-                f.write(chunk)
-                #f.flush() commented by recommendation from J.F.Sebastian
-    return a_file
-
+# def download_file(url):
+#     r = req.get(url, stream=True)
+#     with open(a_file, 'wb') as f:
+#         for chunk in r.iter_content(chunk_size=1024):
+#             if chunk:  # filter out keep-alive new chunks
+#                 f.write(chunk)
+#                 #f.flush() commented by recommendation from J.F.Sebastian
+#     return a_file
 
 for load in listPayloads:
     payload = {'Key': load}
     url_xml = req.get(
         'http://racing.racingnsw.com.au/FreeFields/XML.aspx?', params=payload)
     try:
-        print(url_xml.text)
+        # print(url_xml.response)
+        fileName = url_xml.text55, 84 + ".xml"
+        with open(fileName, 'wb') as fd:
+            for chunk in url_xml.iter_content(chunk_size=128):
+                fd.write(chunk)
     except req.exceptions.HTTPError as err:
-        print(err)
+        # print(err)
         pass
 
 # payload = {'Key': '2018Jul07,NSW,Royal%20Randwick&stage=Results'}
@@ -57,7 +59,7 @@ for load in listPayloads:
 # http://racing.racingnsw.com.au/FreeFields/StageMeeting.aspx?Key=2018Jul14,NSW,Rosehill%20Gardens
 # http://racing.racingnsw.com.au/FreeFields/XML.aspx?Key=2018Jul07,NSW,Royal%20Randwick&stage=Results
 
-print(url_xml.url)
+# print(url_xml.url)
 data = url_meetings.content
 
 soup = BeautifulSoup(data, "html.parser")
