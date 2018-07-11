@@ -62,9 +62,6 @@ links = soup.find_all('a')
 # Trials = soup.findAll('a', {"class": "Trial"})
 # Metro = soup.findAll('a', {"class": "Metro"})
 
-# import requests as req
-# from bs4 import BeautifulSoup
-
 # url = req.get(
 #     'https://www.racingnsw.com.au/media-news-premierships/latest-news/')
 
