@@ -3,12 +3,16 @@ import os, os.path
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
 
-url_news = req.get(
-    'https://www.racingnsw.com.au/media-news-premierships/latest-news/')
+## Refernce URL's
+# url_news = req.get(
+#     'https://www.racingnsw.com.au/media-news-premierships/latest-news/')
 
-url_meetings = req.get(
-    'http://racing.racingnsw.com.au/FreeFields/Calendar_Meetings.aspx?State=NSW'
-)
+# url_meetings = req.get(
+#     'http://racing.racingnsw.com.au/FreeFields/Calendar_Meetings.aspx?State=NSW'
+# )
+# http://racing.racingnsw.com.au/FreeFields/StageMeeting.aspx?Key=2018Jul07,NSW,Royal%20Randwick
+# http://racing.racingnsw.com.au/FreeFields/StageMeeting.aspx?Key=2018Jul14,NSW,Rosehill%20Gardens
+# http://racing.racingnsw.com.au/FreeFields/XML.aspx?Key=2018Jul07,NSW,Royal%20Randwick&stage=Results
 
 # Create dates to pass as payload
 
@@ -27,45 +31,27 @@ for item in listOfDates:
         "http://racing.racingnsw.com.au/FreeFields/XML.aspx?Key=" + item +
         ",NSW,Royal%20Randwick&stage=Results")
 
-# def download_file(url):
-#     r = req.get(url, stream=True)
-#     with open(a_file, 'wb') as f:
-#         for chunk in r.iter_content(chunk_size=1024):
-#             if chunk:  # filter out keep-alive new chunks
-#                 f.write(chunk)
-#                 #f.flush() commented by recommendation from J.F.Sebastian
-#     return a_file
-
 for load in listPayloads:
-    # payload = {'Key': load}
-    # actUrl = req.get(
-    #     "http://racing.racingnsw.com.au/FreeFields/XML.aspx?Key=2018May26,NSW,Royal%20Randwick&stage=Results"
-    # , stream=True)
-    print(load)
-    url_xml = req.get(load, stream=True)
+    url_xml = req.get(load)
     print(url_xml.raw)
     fileName = '/home/sayth/Racing_Download/' + url_xml.url[55:64] + ".xml"
     with open(fileName, 'wb') as fd:
         for chunk in url_xml.iter_content(chunk_size=128):
             fd.write(chunk)
-    # try:
-    #     with open('/home/sayth/Racing_Download/' + url_xml.url[65:74] + ".xml",
-    #               'wb') as fd:tream=True
-    #         for chunk in url_xml.iter_content(chunk_size=128):tream=True
-    #             fd.write(chunk)
-    # except req.exceptions.HTTPError as err:
-    #     next
 
-# payload = {'Key': '2018Jul07,NSW,Royal%20Randwick&stage=Results'}
-# url_xml = req.get(
-#     'http://racing.racingnsw.com.au/FreeFields/XML.aspx?', params=payload)
+for root, _, files in os.walk("/home/sayth/Racing_Download"):
+    for f in files:
+        fullpath = os.path.join(root, f)
+        try:
+            if os.path.getsize(fullpath) < 20 * 1024:  #set file size in kb
+                print(fullpath)
+                os.remove(fullpath)
+        except OSError:
+            print("Error" + fullpath)
 
-# http://racing.racingnsw.com.au/FreeFields/StageMeeting.aspx?Key=2018Jul07,NSW,Royal%20Randwick
-# http://racing.racingnsw.com.au/FreeFields/StageMeeting.aspx?Key=2018Jul14,NSW,Rosehill%20Gardens
-# http://racing.racingnsw.com.au/FreeFields/XML.aspx?Key=2018Jul07,NSW,Royal%20Randwick&stage=Results
-
+## Begin processing files here
 # print(url_xml.url)
-data = url_meetings.content
+# data = url_meetings.content
 
 soup = BeautifulSoup(data, "html.parser")
 
@@ -91,13 +77,3 @@ links = soup.find_all('a')
 
 # for items in soup.select('a[class*="_self"]'):
 #     print(items)
-
-for root, _, files in os.walk("/home/sayth/Racing_Download"):
-    for f in files:
-        fullpath = os.path.join(root, f)
-        try:
-            if os.path.getsize(fullpath) < 20 * 1024:  #set file size in kb
-                print(fullpath)
-                os.remove(fullpath)
-        except OSError:
-            print("Error" + fullpath)
