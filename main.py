@@ -1,7 +1,9 @@
 import requests as req
 import os, os.path
+import glob
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
+import lxml
 
 ## Refernce URL's
 # url_news = req.get(
@@ -16,7 +18,7 @@ from datetime import datetime, timedelta
 
 # Create dates to pass as payload
 
-d1 = datetime(2018, 5, 15)  # start date
+d1 = datetime(2018, 6, 9)  # start date
 d2 = datetime(2018, 6, 15)  # end date
 
 listOfDates = []
@@ -33,7 +35,6 @@ for item in listOfDates:
 
 for load in listPayloads:
     url_xml = req.get(load)
-    print(url_xml.raw)
     fileName = '/home/sayth/Racing_Download/' + url_xml.url[55:64] + ".xml"
     with open(fileName, 'wb') as fd:
         for chunk in url_xml.iter_content(chunk_size=128):
@@ -52,10 +53,16 @@ for root, _, files in os.walk("/home/sayth/Racing_Download"):
 ## Begin processing files here
 # print(url_xml.url)
 # data = url_meetings.content
+folder = glob.glob("/home/sayth/Racing_Download/*.xml")
 
-soup = BeautifulSoup(data, "html.parser")
+print(folder)
+for file in folder:
+    with open(file, 'rb') as rd:
+        data = rd.read()
+        print(data)
+        soup = BeautifulSoup(data, "lxml.parser")
 
-links = soup.find_all('a')
+        links = soup.find_all('a')
 
 # for item in links:
 #     print(item)
