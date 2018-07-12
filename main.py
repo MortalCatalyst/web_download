@@ -59,10 +59,11 @@ print(folder)
 for file in folder:
     with open(file, 'rb') as rd:
         data = rd.read()
-        print(data)
-        soup = BeautifulSoup(data, "lxml.parser")
+        soup = BeautifulSoup(data, "lxml-xml")
 
-        links = soup.find_all('a')
+        links = soup.find_all('race')
+        l = links[0]
+        print(l.attrs)
 
 # for item in links:
 #     print(item)
