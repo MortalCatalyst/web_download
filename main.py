@@ -27,6 +27,7 @@ delta = d2 - d1  # timedelta
 for i in range(delta.days + 1):
     listOfDates.append(datetime.strftime(d1 + timedelta(i), '%Y%b%d'))
 
+# make this a function to accept a URL and extensions
 listPayloads = []
 for item in listOfDates:
     listPayloads.append(
