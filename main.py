@@ -15,24 +15,48 @@ import lxml
 # http://racing.racingnsw.com.au/FreeFields/StageMeeting.aspx?Key=2018Jul07,NSW,Royal%20Randwick
 # http://racing.racingnsw.com.au/FreeFields/StageMeeting.aspx?Key=2018Jul14,NSW,Rosehill%20Gardens
 # http://racing.racingnsw.com.au/FreeFields/XML.aspx?Key=2018Jul07,NSW,Royal%20Randwick&stage=Results
-
+# https://racing.racingnsw.com.au/FreeFields/XML.aspx?Key=2020Sep16,NSW,Warwick%20Farm&stage=Results
+# https://racing.racingnsw.com.au/FreeFields/XML.aspx?Key=2020Sep23,NSW,Canterbury%20Park&stage=Results
 # Create dates to pass as payload
 
-d1 = datetime(2018, 6, 9)  # start date
-d2 = datetime(2018, 6, 15)  # end date
-
+d1 = datetime(2020, 6, 9)  # start date
+d2 = datetime(2020, 6, 30)  # end date
+# #%% 
 listOfDates = []
 
 delta = d2 - d1  # timedelta
 for i in range(delta.days + 1):
     listOfDates.append(datetime.strftime(d1 + timedelta(i), '%Y%b%d'))
-
+# print(listOfDates)
 # make this a function to accept a URL and extensions
+# listPayloads = []
+# for item in listOfDates:
+#     listPayloads.append(
+#         "http://racing.racingnsw.com.au/FreeFields/XML.aspx?Key=" + item +
+#         ",NSW,Royal%20Randwick&stage=Results")
+
 listPayloads = []
+venueList = [",NSW,Royal%20Randwick&stage=Results",",NSW,Rosehill%20Gardens&stage=Results",",NSW,Warwick%20Farm&stage=Results",",NSW,Canterbury%20Park&stage=Results"]
+
 for item in listOfDates:
-    listPayloads.append(
-        "http://racing.racingnsw.com.au/FreeFields/XML.aspx?Key=" + item +
-        ",NSW,Royal%20Randwick&stage=Results")
+    for venue in venueList:
+        listPayloads.append(
+            "http://racing.racingnsw.com.au/FreeFields/XML.aspx?Key=" + item + venue)
+
+# for payload in listPayloads:
+#     for venue in venueList:
+#         payload.append(venue)
+
+print(listPayloads)
+
+
+
+
+# try:
+#     os.makedirs('/home/sayth/Racing_Download/')
+# except OSError as e:
+#     if e.errno != errno.EEXIST:
+#         raise
 
 for load in listPayloads:
     url_xml = req.get(load)
@@ -44,6 +68,7 @@ for load in listPayloads:
 for root, _, files in os.walk("/home/sayth/Racing_Download"):
     for f in files:
         fullpath = os.path.join(root, f)
+        # print(os.path.abspath(fullpath))
         try:
             if os.path.getsize(fullpath) < 20 * 1024:  #set file size in kb
                 print(fullpath)

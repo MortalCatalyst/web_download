@@ -1,4 +1,3 @@
 {
-    "python.pythonPath": "/home/sayth/anaconda3/envs/web/bin/python",
     "python.formatting.provider": "yapf"
 }
