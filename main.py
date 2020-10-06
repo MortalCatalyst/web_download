@@ -1,9 +1,7 @@
 import requests as req
 import os, os.path
 import glob
-from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
-import lxml
 import re
 import time
 
@@ -27,8 +25,8 @@ import time
 # https://racing.racingnsw.com.au/FreeFields/XML.aspx?Key=2020Aug28,NSW,Gosford&stage=Results
 # Create dates to pass as payload
 
-d1 = datetime(2020, 4, 1)  # start date
-d2 = datetime(2020, 6, 30)  # end date
+d1 = datetime(2020, 6, 30)  # start date
+d2 = datetime(2020, 10, 6)  # end date
 # #%% 
 listOfDates = []
 
@@ -48,7 +46,7 @@ for item in listOfDates:
 
 for load in listPayloads:
     url_xml = req.get(load)
-    time.sleep(0.7)
+    time.sleep(1.3)
     handle = load.split(',')[2][0:-14]
     tidy_handle = re.sub("%20","_", handle)
     fileName = '/home/sayth/Racing_Download/' + tidy_handle + "_" + url_xml.url[55:64] + ".xml"
@@ -66,33 +64,3 @@ for root, _, files in os.walk("/home/sayth/Racing_Download"):
                 os.remove(fullpath)
         except OSError:
             print("Error" + fullpath)
-
-## Begin processing files here
-# print(url_xml.url)
-# data = url_meetings.content
-# folder = glob.glob("/home/sayth/Racing_Download/*.xml")
-
-# # print(folder)
-# for file in folder:
-#     with open(file, 'rb') as rd:
-#         data = rd.read()
-#         soup = BeautifulSoup(data, "lxml-xml")
-
-#         links = soup.find_all('race')
-#         l = links[0]
-#         print(l.attrs)
-
-# for item in links:
-#     print(item)
-# Trials = soup.findAll('a', {"class": "Trial"})
-# Metro = soup.findAll('a', {"class": "Metro"})
-
-# url = req.get(
-#     'https://www.racingnsw.com.au/media-news-premierships/latest-news/')
-
-# data = url.content
-
-# soup = BeautifulSoup(data, "html.parser")
-
-# for items in soup.select('a[class*="_self"]'):
-#     print(items)
