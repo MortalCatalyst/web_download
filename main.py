@@ -5,6 +5,8 @@ from datetime import datetime, timedelta
 import re
 import time
 
+# https://racing.racingnsw.com.au/FreeFields/XML.aspx?Key=2021Jul31,NSW,Royal%20Randwick&stage=Results
+# https://racing.racingnsw.com.au/FreeFields/XML.aspx?Key=2021Aug07,NSW,Royal%20Randwick&stage=Nominations
 ## Refernce URL's
 # url_news = req.get(
 #     'https://www.racingnsw.com.au/media-news-premierships/latest-news/')
@@ -25,8 +27,8 @@ import time
 # https://racing.racingnsw.com.au/FreeFields/XML.aspx?Key=2020Aug28,NSW,Gosford&stage=Results
 # Create dates to pass as payload
 
-d1 = datetime(2020, 6, 30)  # start date
-d2 = datetime(2020, 10, 6)  # end date
+d1 = datetime(2021, 7, 30)  # start date
+d2 = datetime(2021, 8, 1)  # end date
 # #%% 
 listOfDates = []
 
@@ -44,17 +46,31 @@ for item in listOfDates:
         listPayloads.append(
             "http://racing.racingnsw.com.au/FreeFields/XML.aspx?Key=" + item + venue)
 
+
+#TODO: Instead of writing. check the file head and not download. So create a function that does that.
+# Trialing it returns a 200 and then invalid.
+# def checkFileSize(url):
+#     response = req.get(url)
+#     return response.status_code
+#     # if response.status_code == 200:
+#     #     print('Success!')
+#     #     return url
+#     # elif response.status_code == 404:
+#     #     print('Not Found.')
+
+
 for load in listPayloads:
     url_xml = req.get(load)
     time.sleep(1.3)
     handle = load.split(',')[2][0:-14]
     tidy_handle = re.sub("%20","_", handle)
-    fileName = '/home/sayth/Racing_Download/' + tidy_handle + "_" + url_xml.url[55:64] + ".xml"
+    fileName = 'C:/Users/PC_User/OneDrive/Racing/Datasource/' + tidy_handle + "_" + url_xml.url[55:64] + ".xml"
+    print(fileName)
     with open(fileName, 'wb') as fd:
         for chunk in url_xml.iter_content(chunk_size=128):
             fd.write(chunk)
 
-for root, _, files in os.walk("/home/sayth/Racing_Download"):
+for root, _, files in os.walk("C:/Users/PC_User/OneDrive/Racing/Datasource/"):
     for f in files:
         fullpath = os.path.join(root, f)
         # print(os.path.abspath(fullpath))
@@ -64,3 +80,4 @@ for root, _, files in os.walk("/home/sayth/Racing_Download"):
                 os.remove(fullpath)
         except OSError:
             print("Error" + fullpath)
+            pass
