@@ -21,7 +21,6 @@ try:
 except:
     pass
 
-
 # if df.Race_Price.str.endswith("F"):
 #     df.Race_Price.rstrip(df.Race_Price[-1])
 
