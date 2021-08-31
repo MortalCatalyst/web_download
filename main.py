@@ -27,27 +27,37 @@ import time
 # https://racing.racingnsw.com.au/FreeFields/XML.aspx?Key=2020Aug28,NSW,Gosford&stage=Results
 # Create dates to pass as payload
 
-d1 = datetime(2021, 7, 30)  # start date
-d2 = datetime(2021, 8, 1)  # end date
-# #%% 
+d1 = datetime(2021, 4, 1)  # start date
+d2 = datetime(2021, 8, 31)  # end date
+# #%%
 listOfDates = []
 
 delta = d2 - d1  # timedelta
 for i in range(delta.days + 1):
-    listOfDates.append(datetime.strftime(d1 + timedelta(i), '%Y%b%d'))
+    listOfDates.append(datetime.strftime(d1 + timedelta(i), "%Y%b%d"))
 
 listPayloads = []
-venueList = [",NSW,Royal%20Randwick&stage=Results",",NSW,Rosehill%20Gardens&stage=Results",",NSW,Warwick%20Farm&stage=Results",",NSW,Canterbury%20Park&stage=Results",
-            ",NSW,Kembla%20Grange&stage=Results",",NSW,Newcastle&stage=Results",",NSW,Goulburn&stage=Results",",NSW,Hawkesbury&stage=Results", ",NSW,Wyong&stage=Results",
-             ",NSW,Gosford&stage=Results"]
+venueList = [
+    ",NSW,Royal%20Randwick&stage=Results",
+    ",NSW,Rosehill%20Gardens&stage=Results",
+    ",NSW,Warwick%20Farm&stage=Results",
+    ",NSW,Canterbury%20Park&stage=Results",
+    ",NSW,Kembla%20Grange&stage=Results",
+    ",NSW,Newcastle&stage=Results",
+    ",NSW,Goulburn&stage=Results",
+    ",NSW,Hawkesbury&stage=Results",
+    ",NSW,Wyong&stage=Results",
+    ",NSW,Gosford&stage=Results",
+]
 
 for item in listOfDates:
     for venue in venueList:
         listPayloads.append(
-            "http://racing.racingnsw.com.au/FreeFields/XML.aspx?Key=" + item + venue)
+            "http://racing.racingnsw.com.au/FreeFields/XML.aspx?Key=" + item + venue
+        )
 
 
-#TODO: Instead of writing. check the file head and not download. So create a function that does that.
+# TODO: Instead of writing. check the file head and not download. So create a function that does that.
 # Trialing it returns a 200 and then invalid.
 # def checkFileSize(url):
 #     response = req.get(url)
@@ -62,11 +72,17 @@ for item in listOfDates:
 for load in listPayloads:
     url_xml = req.get(load)
     time.sleep(1.3)
-    handle = load.split(',')[2][0:-14]
-    tidy_handle = re.sub("%20","_", handle)
-    fileName = 'C:/Users/PC_User/OneDrive/Racing/Datasource/' + tidy_handle + "_" + url_xml.url[55:64] + ".xml"
+    handle = load.split(",")[2][0:-14]
+    tidy_handle = re.sub("%20", "_", handle)
+    fileName = (
+        "C:/Users/PC_User/OneDrive/Racing/Datasource/"
+        + tidy_handle
+        + "_"
+        + url_xml.url[55:64]
+        + ".xml"
+    )
     print(fileName)
-    with open(fileName, 'wb') as fd:
+    with open(fileName, "wb") as fd:
         for chunk in url_xml.iter_content(chunk_size=128):
             fd.write(chunk)
 
@@ -75,7 +91,7 @@ for root, _, files in os.walk("C:/Users/PC_User/OneDrive/Racing/Datasource/"):
         fullpath = os.path.join(root, f)
         # print(os.path.abspath(fullpath))
         try:
-            if os.path.getsize(fullpath) < 20 * 1024:  #set file size in kb
+            if os.path.getsize(fullpath) < 20 * 1024:  # set file size in kb
                 print(fullpath)
                 os.remove(fullpath)
         except OSError:
