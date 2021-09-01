@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+import re
 
 data = r"C:\Users\PC_User\OneDrive\Racing\Datasource"
 output_dir = r"C:\Users\PC_User\OneDrive\Racing\RacingData"
@@ -21,11 +22,11 @@ try:
 except:
     pass
 
-# if df.Race_Price.str.endswith("F"):
-#     df.Race_Price.rstrip(df.Race_Price[-1])
-
-m = df.Race_Price.str.endswith("F")
-df.loc[m] = df.loc[m].str[:-1]
+df["Race_Price"] = df["Race_Price"].str.replace(r"^\$|F$", "", regex=True)
+try:
+    df["Race_Price"] = pd.to_numeric(df.Race_Price)
+except:
+    pass
 
 path = os.path.join(output_dir, file2)
 
